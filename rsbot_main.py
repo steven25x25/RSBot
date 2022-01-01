@@ -102,27 +102,27 @@ no_detect_flag = False
 
 #timeout parameters
 start_time = time.perf_counter()
-timeout_thres = 14400
+timeout_thres = 18000
 
 
-'''
+
 #ADHOC TO EMPTY INVENTORY
 friends_button = None
 while friends_button is None:
     friends_button = pyautogui.locateOnScreen('friends_button.png')
     if not friends_button:
         print("Cannot locate friends button       ", end="\r")
-friends_button = (friends_button[0] + (friends_button[2]),friends_button[1] + (friends_button[3]//2) - 224)
+friends_button = (friends_button[0] + (friends_button[2]),friends_button[1] + (friends_button[3]//2) - 235)
 
-
+'''
 rs_tab = None
 while rs_tab is None:
     rs_tab = pyautogui.locateOnScreen('logo.png')
     if not rs_tab:
         print("Cannot locate runescape tab       ", end="\r")
 rs_tab = (rs_tab[0] + (rs_tab[2]), rs_tab[1] + (rs_tab[3]//2))
-
 '''
+
 
 targetables = None
 with open("config/rs.names") as file:
@@ -154,6 +154,57 @@ while True:
 
         #fix to occur only once
         character_loc = [screen.width//2, screen.height//2]
+
+
+        if iter % 8 == 0 and target_id == 0:
+                print("Clearing inventory...                                         ", end="\r")
+
+                
+                pyautogui.keyDown('shift')
+
+                
+                click_loc_init = (friends_button[0], friends_button[1])
+                click_loc = list(click_loc_init)
+
+                for ind in range(24):
+                    pyautogui.moveTo(click_loc[0], click_loc[1], 0.1 + (random.random() * 0.1), pyautogui.easeInCubic)
+                    time.sleep(0.05+random.random()*0.15)
+                    #check if mouse is moving
+
+                    if pyautogui.position() != tuple(click_loc):
+                        pyautogui.keyUp('shift')
+                        break
+                    
+                    pyautogui.click()
+                    time.sleep(0.2)
+
+                    click_loc[0] += 42
+
+                    if (ind + 1) % 4 == 0:
+                        click_loc[0] = click_loc_init[0]
+                        click_loc[1] += 39
+
+                #close bag ui
+                pyautogui.moveTo(1096,838,0.2,pyautogui.easeInCubic)
+                pyautogui.click()
+
+                
+                for obj in output:
+                    if obj[6] == 1:
+                        center_x = obj[0] + ((obj[2] - obj[0])//2)
+                        center_y = obj[1] + ((obj[3] - obj[1])//2)
+
+                        
+                        pyautogui.moveTo(center_x, center_y, 0.5, pyautogui.easeInCubic)
+                        time.sleep(0.1)
+                        pyautogui.click()
+                        time.sleep(0.1)
+                        pyautogui.moveTo(pyautogui.position()[0] + int(random.random() * (20)), pyautogui.position()[1] + int(random.random() * (20)))
+                        time.sleep(0.4)
+                
+
+                pyautogui.keyUp('shift')
+
         
         if output:
             
@@ -164,7 +215,7 @@ while True:
                 pyautogui.moveTo(target[0], target[1], 0.1, pyautogui.easeInCubic)
                 time.sleep(0.1)
                 pyautogui.click()
-                time.sleep(0.5)
+                time.sleep(18)
 
                 n_clicks = random.randint(1,3)
                 for click_n in range(n_clicks):
@@ -187,54 +238,7 @@ while True:
 
             #finds detected logs and click on them to drop
             
-            if iter % 24 == 0:
-                # print("Clearing inventory...                                         ", end="\r")
-
-                
-                # pyautogui.keyDown('shift')
-
-                
-                # click_loc_init = (friends_button[0], friends_button[1])
-                # click_loc = list(click_loc_init)
-
-                # for ind in range(20):
-                #     pyautogui.moveTo(click_loc[0], click_loc[1], 0.1 + (random.random() * 0.1), pyautogui.easeInCubic)
-                #     time.sleep(0.1)
-                #     #check if mouse is moving
-
-                #     if pyautogui.position() != tuple(click_loc):
-                #         pyautogui.keyUp('shift')
-                #         break
-                    
-                #     pyautogui.click()
-                #     time.sleep(0.2)
-
-                #     click_loc[0] += 42
-
-                #     if (ind + 1) % 4 == 0:
-                #         click_loc[0] = click_loc_init[0]
-                #         click_loc[1] += 39
-
-                #close bag ui
-                pyautogui.moveTo(1096,838,0.2,pyautogui.easeInCubic)
-                pyautogui.click()
-
-                
-                for obj in output:
-                    if obj[6] == 1:
-                        center_x = obj[0] + ((obj[2] - obj[0])//2)
-                        center_y = obj[1] + ((obj[3] - obj[1])//2)
-
-                        
-                        pyautogui.moveTo(center_x, center_y, 0.5, pyautogui.easeInCubic)
-                        time.sleep(0.1)
-                        pyautogui.click()
-                        time.sleep(0.1)
-                        pyautogui.moveTo(pyautogui.position()[0] + int(random.random() * (20)), pyautogui.position()[1] + int(random.random() * (20)))
-                        time.sleep(0.4)
-                
-
-                pyautogui.keyUp('shift')
+            
             
             iter += 1
             no_detect_flag = False
